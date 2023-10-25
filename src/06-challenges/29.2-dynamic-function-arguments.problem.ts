@@ -6,9 +6,13 @@ interface Events {
     y: number;
   };
   focus: undefined;
+  test: [number, string]
 }
 
-export const sendEvent = (event: keyof Events, ...args: any[]) => {
+
+// export const sendEvent = (event: keyof Events, ...args: any[]) => {
+type SendEventArgs<TEvent extends keyof Events> = Events[TEvent] extends {} ? [eventPayload: Events[TEvent]] : [];
+export const sendEvent = <TEvent extends keyof Events>(event: TEvent, ...args: SendEventArgs<TEvent>) => {
   // Send the event somewhere!
 };
 
@@ -33,6 +37,8 @@ it("Should force you to pass a second argument when you choose an event with a p
     x: 1,
     y: 2,
   });
+
+  sendEvent("test", [123, "str"]);
 });
 
 it("Should prevent you from passing a second argument when you choose an event without a payload", () => {
